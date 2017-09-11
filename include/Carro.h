@@ -14,6 +14,7 @@ class Carro {
 public:
 	static const int CAPACIDADE;
 	static int numPassageiros;
+	static bool voltaAcabou;
 
 	Carro();
 	virtual ~Carro();

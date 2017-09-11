@@ -16,8 +16,8 @@ Parque::Parque() {
 Parque::~Parque() {
 }
 
-void Parque::addPassageiro(Passageiro *p) {
-	passageiros.push_back(p);
+void Parque::addPassageiro(Passageiro *p) { // Recebe endereço/ponteiro do tipo Passageiro
+	passageiros.push_back(p); // Adiciona o endereço recebido no fim do vector private passageiros
 }
 
 vector<Passageiro*>& Parque::getPassageiros() {

@@ -22,6 +22,14 @@ Passageiro::~Passageiro() {
 void Passageiro::entraNoCarro() {
 	// Protocolo de entrada o Algoritmo da Padaria
 	// Incrementa o numero de passageiros no carro (use a funcao fetch_add)
+	/*
+	escolhendo[id] = true;
+
+	for (int j = 0; j < parque->numPessoas; j++)
+        while (escolhendo[j]) ;
+            while (num[j] != 0 && (num[j] < num[i] || num[i] == num[j] && j < i));
+
+   	*/
 }
 
 void Passageiro::esperaVoltaAcabar() {
