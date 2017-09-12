@@ -20,6 +20,8 @@ public:
 	void saiDoCarro();
 	void passeiaPeloParque();
 	bool parqueFechado();
+	
+	int getID();
 
 	void run();
 private:
