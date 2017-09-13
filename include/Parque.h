@@ -17,7 +17,7 @@ using namespace std;
 
 class Parque {
 public:
-	static int numPessoas;
+	static atomic<int> numPessoas;
 
 	Parque();
 	virtual ~Parque();

@@ -52,6 +52,7 @@ void Carro::esperaEncher() {
 
 void Carro::daUmaVolta() {
 	// Dorme por um tempo fixo
+	
 	while (Carro::lock.test_and_set()) {}
 	cout << endl << "Dando uma volta." << " Nº Passageiros: " << Carro::numPassageiros << endl;
 	Carro::lock.clear();
