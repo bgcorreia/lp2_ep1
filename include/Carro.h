@@ -20,6 +20,7 @@ class Carro {
 public:
 	static const int CAPACIDADE;
 	static atomic<int> numPassageiros;
+	static std::atomic_flag lock;
 	static bool voltaAcabou;
 
 	Carro();

@@ -19,6 +19,7 @@ using namespace std;
 
 const int Carro::CAPACIDADE = 5;
 atomic<int> Carro::numPassageiros = ATOMIC_VAR_INIT(0);
+atomic_flag Carro::lock = ATOMIC_FLAG_INIT;
 bool Carro::voltaAcabou = false;
 
 /*
@@ -39,26 +40,38 @@ Carro::~Carro() {
 
 void Carro::esperaEncher() {
 
-	cout << endl << "Pré-esperando encher..." << endl;
-
 	while (Carro::numPassageiros < Carro::CAPACIDADE) {
-		cout << endl << "Aguardando encher... " << "Passageiros: " << Carro::numPassageiros << endl;
+		
+		while (Carro::lock.test_and_set()) {}
+		cout << endl << "Aguardando encher... " << endl;
+		Carro::lock.clear();
+		
 		delay(TEMPO_DELAY); // Chama o delay
 	}
 }
 
 void Carro::daUmaVolta() {
 	// Dorme por um tempo fixo
-	cout << endl << "Thread [" << id << "] - Dando uma volta." << " Nº Passageiros: " << Carro::numPassageiros << endl;
-	delay(10);
+	while (Carro::lock.test_and_set()) {}
+	cout << endl << "Dando uma volta." << " Nº Passageiros: " << Carro::numPassageiros << endl;
+	Carro::lock.clear();
+	
+	delay(TEMPO_DELAY);
+	
 	voltaAcabou = true;
-	voltas++;
+	
+	while (Carro::lock.test_and_set()) {}
+	cout << endl << "Nº Voltas: " << ++voltas << endl;
+	Carro::lock.clear();
+	//voltas++;
 }
 
 void Carro::esperaEsvaziar() {
-	while (Carro::numPassageiros > 0) { 
+	while (Carro::numPassageiros > 0) {
+		while (Carro::lock.test_and_set()) {}
 		cout << endl << "Esperando esvaziar..." << endl;
-		cout << endl << "Thread [" << id << "] - Sai do carro." << " Nº Passageiros: " << Carro::numPassageiros << endl;
+		Carro::lock.clear();	
+
 		delay(TEMPO_DELAY); 
 	}
 }

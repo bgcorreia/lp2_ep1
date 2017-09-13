@@ -10,7 +10,9 @@
 #include "include/Carro.h"
 #include "include/Parque.h"
 
-#define MAX_NUM_VOLTAS 50
+#define MAX_NUM_VOLTAS 5
+#define TEMPO_PASSEIO 8
+#define TEMPO_VOLTA 4
 
 using namespace std;
 
@@ -26,30 +28,31 @@ void Passageiro::entraNoCarro() {
 	// Protocolo de entrada o Algoritmo da Padaria
 	// Incrementa o numero de passageiros no carro (use a funcao fetch_add)
 	
-	bool entrando[10] = {false};
-	int numFicha[10] = {0}, max = 0;
+	bool entra[Parque::numPessoas] = {false};
+	int numFicha[Parque::numPessoas] = {0}, max = 0;
 
-	entrando[id] = true;
+	entra[id] = true;
 
 	// Pega maior valor
-	for (int i = 0 ; i < Carro::CAPACIDADE ; i++){  // VERIFICA MAIOR FICHA    
+	for (int i = 0 ; i < Parque::numPessoas; i++){  // VERIFICA MAIOR FICHA    
 		if (numFicha[i] > max){
 			max = numFicha[i];
 		}
 	}
 
 	numFicha[id] = 1 + max; // PEGA FICHA
-	entrando[id] = false; 
+	
+	entra[id] = false; 
 
 	//cout << endl << "Pré-for Passageiros... Nº " << id << endl;
 	//delay(2);
 
-	for (int j = 0; j < Carro::CAPACIDADE; j++){
+	for (int j = 0; j < Parque::numPessoas; j++){
 		// Espera enquanto thread j receber os números
 		//cout << endl << "Entrou no for Passageiros... Nº " << id << endl;
 		//delay(2);
 
-		while (entrando[j]) { 
+		while (entra[j]) { 
 			//cout << endl << "Valor de J dentro do while: " << j << endl;
         	//delay(1);
         	/* While vazio */ 
@@ -64,54 +67,22 @@ void Passageiro::entraNoCarro() {
 		
 	}
 
-	cout << endl << " Thread:" << id << " | "  << "/+/ [Entrada] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
+	//cout << endl << " Thread:" << id << " | "  << "/+/ [Entrada] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
 	Carro::numPassageiros.fetch_add(1, memory_order_relaxed);
-	cout << endl << " Thread:" << id << " | "  << "/+/ [Entrada] Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
+
+	while (Carro::lock.test_and_set()) {}
+	cout << endl << " Thread:" << id << " | "  << "Entrei no carro... Passageiro Nº: " << Carro::numPassageiros << endl;
+	Carro::lock.clear();
 	
-    //delay(2);
-
-	// TESTE IMPLEMENTAÇÃO
-	/*
-	int escolhendo[Carro::CAPACIDADE], num[Carro::CAPACIDADE], j = 0;
-	
-	escolhendo[id] = true;
-
-	cout << endl << "Pré-for Passageiros... Nº " << id << endl;
-	delay(2);
-
-	for (j = 0; j < Carro::CAPACIDADE; j++) {
-        
-		cout << endl << "Pró-for Passageiros... Nº " << id << endl;
-		delay(2);
-
-		cout << endl << "J: " << j << endl;
-		delay(2);
-
-    	while (escolhendo[j]) {
-        	cout << endl << "Valor de J dentro do while: " << j << endl;
-        	delay(2);
-        }
-
-        cout << endl << "Saiu do while" << endl;
-        delay(2);
-    }
-
-    cout << endl << "Saiu do for" << endl;
-    cout << endl << "num[j]: " << num[j] << " / num[id]: " << num[id] << endl; 
-    delay(2);
-           
-    while (num[j] != 0 && (num[j] < num[id] || num[id] == num[j] && j < id)){
-       	cout << endl << "Incremento Passageiros..." << endl;
-       	delay(2);
-       	Carro::numPassageiros.fetch_add(1, memory_order_relaxed);
-    }
-	*/
-}
+ }
 
 void Passageiro::esperaVoltaAcabar() {
 	while (!Carro::voltaAcabou) {
+		while (Carro::lock.test_and_set()) {}
 		cout << endl << " Thread:" << id << " | " << "Aguardando volta acabar..." << endl;
-		delay(2); 
+		Carro::lock.clear();
+
+		delay(TEMPO_VOLTA); 
 	}
 	//cout << endl << "Volta ACABOU!" << endl;
 }
@@ -120,13 +91,22 @@ void Passageiro::saiDoCarro() {
 	// Protocolo de saida do Algoritmo da Padaria
 	// Decrementa o numero de passageiros no carro (use a funcao fetch_add)
 	//num[id]--;
-	cout << endl << " Thread:" << id << " | " << "/-/ [Protocolo de Saída] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
+	//cout << endl << " Thread:" << id << " | " << "/-/ [Protocolo de Saída] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
 	Carro::numPassageiros.fetch_sub(1, memory_order_relaxed);
-	cout << endl << " Thread:" << id << " | "  << "/-/ [Protocolo de Saída] Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
+
+	while (Carro::lock.test_and_set()) {}
+	cout << endl << " Thread:" << id << " | "  << "Sai do carro... Restam [" << Carro::numPassageiros << "] Passageiros." << endl;
+	Carro::lock.clear();
 }
 
 void Passageiro::passeiaPeloParque() {
 	// Dorme um tempo aleatorio
+
+	while (Carro::lock.test_and_set()) {}
+	cout << endl << " Thread:" << id << " | " << "Passeando pelo parque!" << endl;
+	Carro::lock.clear();	
+
+	delay(TEMPO_PASSEIO);
 }
 
 bool Passageiro::parqueFechado() {
