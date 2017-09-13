@@ -26,15 +26,15 @@ void Passageiro::entraNoCarro() {
 	// Protocolo de entrada o Algoritmo da Padaria
 	// Incrementa o numero de passageiros no carro (use a funcao fetch_add)
 	
-	bool entrando[Carro::numPassageiros] = {false};
-	int numFicha[Carro::numPassageiros] = {0}, max = 0;
+	bool entrando[10] = {false};
+	int numFicha[10] = {0}, max = 0;
 
 	entrando[id] = true;
 
 	// Pega maior valor
 	for (int i = 0 ; i < Carro::CAPACIDADE ; i++){  // VERIFICA MAIOR FICHA    
-		if (num[i] > max){
-			max = num[i];
+		if (numFicha[i] > max){
+			max = numFicha[i];
 		}
 	}
 
@@ -64,9 +64,9 @@ void Passageiro::entraNoCarro() {
 		
 	}
 
-	//cout << endl << " Thread:" << id << " | "  << "/+/ Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
+	cout << endl << " Thread:" << id << " | "  << "/+/ [Entrada] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
 	Carro::numPassageiros.fetch_add(1, memory_order_relaxed);
-	//cout << endl << " Thread:" << id << " | "  << "/+/ Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
+	cout << endl << " Thread:" << id << " | "  << "/+/ [Entrada] Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
 	
     //delay(2);
 
@@ -120,9 +120,9 @@ void Passageiro::saiDoCarro() {
 	// Protocolo de saida do Algoritmo da Padaria
 	// Decrementa o numero de passageiros no carro (use a funcao fetch_add)
 	//num[id]--;
-	cout << endl << " Thread:" << id << " | " << "/-/ Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
+	cout << endl << " Thread:" << id << " | " << "/-/ [Protocolo de Saída] Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
 	Carro::numPassageiros.fetch_sub(1, memory_order_relaxed);
-	cout << endl << " Thread:" << id << " | "  << "/-/ Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
+	cout << endl << " Thread:" << id << " | "  << "/-/ [Protocolo de Saída] Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
 }
 
 void Passageiro::passeiaPeloParque() {

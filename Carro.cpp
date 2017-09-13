@@ -13,7 +13,7 @@
 #include "include/Parque.h"
 #include "include/Passageiro.h"
 
-#define TEMPO_DELAY 1
+#define TEMPO_DELAY 2
 
 using namespace std;
 
@@ -41,23 +41,24 @@ void Carro::esperaEncher() {
 
 	cout << endl << "Pré-esperando encher..." << endl;
 
-	while (Carro::numPassageiros < Carro::CAPACIDADE) { 
-		delay(TEMPO_DELAY); // Chama o delay
+	while (Carro::numPassageiros < Carro::CAPACIDADE) {
 		cout << endl << "Aguardando encher... " << "Passageiros: " << Carro::numPassageiros << endl;
+		delay(TEMPO_DELAY); // Chama o delay
 	}
 }
 
 void Carro::daUmaVolta() {
 	// Dorme por um tempo fixo
-	cout << endl << "Dando uma volta!" << " Nº Passageiros: " << Carro::numPassageiros << endl;
-	delay(5);
+	cout << endl << "Thread [" << id << "] - Dando uma volta." << " Nº Passageiros: " << Carro::numPassageiros << endl;
+	delay(10);
 	voltaAcabou = true;
 	voltas++;
 }
 
 void Carro::esperaEsvaziar() {
 	while (Carro::numPassageiros > 0) { 
-		cout << endl << "Esperando esvaziar..." << " Nº Passageiros: " << Carro::numPassageiros << endl;
+		cout << endl << "Esperando esvaziar..." << endl;
+		cout << endl << "Thread [" << id << "] - Sai do carro." << " Nº Passageiros: " << Carro::numPassageiros << endl;
 		delay(TEMPO_DELAY); 
 	}
 }

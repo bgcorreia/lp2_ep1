@@ -8,6 +8,8 @@
 #ifndef PASSAGEIRO_H_
 #define PASSAGEIRO_H_
 
+
+
 class Carro;
 class Parque;
 
@@ -20,8 +22,6 @@ public:
 	void saiDoCarro();
 	void passeiaPeloParque();
 	bool parqueFechado();
-	
-	int getID();
 
 	void run();
 private:
