@@ -22,33 +22,29 @@ Passageiro::Passageiro(int id, Carro *c) {
 Passageiro::~Passageiro() {
 }
 
-int Passageiro::getID() {
-	return id;
-}
-
 void Passageiro::entraNoCarro() {
 	// Protocolo de entrada o Algoritmo da Padaria
 	// Incrementa o numero de passageiros no carro (use a funcao fetch_add)
 	
-	bool entrando[Carro::CAPACIDADE] = {false};
-	int num[Carro::CAPACIDADE] = {0}, max = 0;
+	bool entrando[Carro::numPassageiros] = {false};
+	int numFicha[Carro::numPassageiros] = {0}, max = 0;
 
 	entrando[id] = true;
 
 	// Pega maior valor
-	for (int i = 0 ; i < Carro::CAPACIDADE ; i++){
+	for (int i = 0 ; i < Carro::CAPACIDADE ; i++){  // VERIFICA MAIOR FICHA    
 		if (num[i] > max){
 			max = num[i];
 		}
 	}
 
-	num[id] = 1 + max;
-	entrando[id] = false;
+	numFicha[id] = 1 + max; // PEGA FICHA
+	entrando[id] = false; 
 
 	//cout << endl << "Pré-for Passageiros... Nº " << id << endl;
 	//delay(2);
 
-	for (int j = 1; j < Carro::CAPACIDADE; j++){
+	for (int j = 0; j < Carro::CAPACIDADE; j++){
 		// Espera enquanto thread j receber os números
 		//cout << endl << "Entrou no for Passageiros... Nº " << id << endl;
 		//delay(2);
@@ -62,15 +58,15 @@ void Passageiro::entraNoCarro() {
         //cout << endl << "Saiu do while" << endl;
         //delay(2);
 
-		while (num[j] != 0 && (num[j] < num[id] || num[id] == num[j] && j < id)){ 
+		while (numFicha[j] != 0 && (numFicha[j] < numFicha[id] || numFicha[id] == numFicha[j] && j < id)){ 
 			/* While vazio */
 		}
 		
 	}
 
-	cout << endl << " Thread:" << id << " | "  << "/+/ Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
+	//cout << endl << " Thread:" << id << " | "  << "/+/ Antes Passageiros... Nº: " << Carro::numPassageiros << endl;
 	Carro::numPassageiros.fetch_add(1, memory_order_relaxed);
-	cout << endl << " Thread:" << id << " | "  << "/+/ Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
+	//cout << endl << " Thread:" << id << " | "  << "/+/ Depois Passageiros... Nº: " << Carro::numPassageiros << endl;
 	
     //delay(2);
 
