@@ -25,21 +25,25 @@ Passageiro::~Passageiro() {
 void Passageiro::entraNoCarro() {
 			
 	// Protocolo de entrada o Algoritmo da Padaria
-        int max=0; //Valor maximo ou fim da fila
-        for(auto &tred : parque->getPassageiros()){//conta até o final do vector de threads do parque(ver main.cpp)
-                if(tred->vez>max){ //se a vez de alguem que está esperando for maior que o maximo
-                        max+=tred->vez;//o maximo passa a ser o maior mais 1
-                }
-        }
-        this->vez=max + 1; //passa o valor maximo para ser a vez do passageiro 
-        for(auto &tred : parque->getPassageiros()){//conta até o final do vector de threads do parque(ver main.cpp)
-                if(this->id!=tred->id){
-                        while((tred->vez!=0 && ( this->vez > tred->vez || (vez == tred->vez && this->id > tred->id) ) ) || (carro->Carro::numPassageiros) >= (Carro::CAPACIDADE) || (carro->voltaAcabou)){}
-                }
-        }
-        
-        Carro::numPassageiros.fetch_add(1, memory_order_relaxed); //Incrementa o numero de passageiros no carro
-        this->vez=0;
+    int max=0; //Valor maximo ou fim da fila
+
+    for(auto &processamento : parque->getPassageiros()){//conta até o final do vector de threads do parque(ver main.cpp)
+    		// Processamento guarda o endereço do 
+            if( processamento->ficha > max ){ //se a vez de alguem que está esperando for maior que o maximo
+                    max+=processamento->ficha;//o maximo passa a ser o maior mais 1
+            }
+    }
+    
+    this->ficha=max + 1; //passa o valor maximo para ser a vez do passageiro 
+    
+    for(auto &processamento : parque->getPassageiros()){//conta até o final do vector de threads do parque(ver main.cpp)
+            if( this-> id != processamento->id ){
+                    while(( processamento->ficha !=0 && ( this->ficha > processamento->ficha || (ficha == processamento->ficha && this->id > processamento->id) ) ) || (carro->Carro::numPassageiros) >= (Carro::CAPACIDADE) || (carro->voltaAcabou)){}
+            }
+    }
+    
+    Carro::numPassageiros.fetch_add(1, memory_order_relaxed); //Incrementa o numero de passageiros no carro
+    this->ficha=0;
 	
 	
  }
@@ -85,7 +89,7 @@ void Passageiro::run() {
 		entraNoCarro(); // protocolo de entrada
 
         while (Carro::lock.test_and_set()) {}
-        cout << endl << "Thread: " << this->id << " | Entrei no Carro" <<endl;
+        cout << endl << "Passageiro: " << this->id << " | Entrei no Carro" <<endl;
         Carro::lock.clear();
         
         esperaVoltaAcabar();
@@ -95,11 +99,11 @@ void Passageiro::run() {
         n++;
 
         while (Carro::lock.test_and_set()) {}
-        cout << endl << "Thread: " << this->id <<" | Sai do Carro"<<endl;
+        cout << endl << "Passageiro: " << this->id <<" | Sai do Carro"<<endl;
         Carro::lock.clear();
 
         while (Carro::lock.test_and_set()) {}
-		cout << endl << "Thread: " << this->id << " | " << "Vou passear pelo parque!" << endl;
+		cout << endl << "Passageiro: " << this->id << " | " << "Vou passear pelo parque!" << endl;
 		Carro::lock.clear();
 		passeiaPeloParque(); // secao nao critica
 	}
@@ -108,7 +112,7 @@ void Passageiro::run() {
 	Parque::numPessoas.fetch_sub(1, memory_order_relaxed);
 
 	while (Carro::lock.test_and_set()) {}
-		cout << endl << "Thread: " << this->id << " | Terminei - Dei "<< n <<" voltas" << endl;
+		cout << endl << "Passageiro: " << this->id << " | Terminei - Dei "<< n <<" voltas" << endl;
 		Carro::lock.clear();
 }
 

@@ -11,8 +11,14 @@
 #include <atomic>
 
 #define MAX_NUM_VOLTAS 4
-#define TEMPO_PASSEIO 5
+
+// TODOS EM SEGUNDOS
+#define TEMPO_DELAY 2
+
 #define TEMPO_VOLTA 2
+#define TEMPO_PASSEIO 5
+
+#define TEMPO_ENCHER_ESVAZIAR 3
 
 using namespace std;
 

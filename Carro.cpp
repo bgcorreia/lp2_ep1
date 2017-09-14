@@ -13,11 +13,6 @@
 #include "include/Parque.h"
 #include "include/Passageiro.h"
 
-// TODOS EM SEGUNDOS
-#define TEMPO_DELAY 2
-#define TEMPO_VOLTA 2
-#define TEMPO_ENCHER_ESVAZIAR 3
-
 using namespace std;
 
 const int Carro::CAPACIDADE = 5;
@@ -99,14 +94,19 @@ void Carro::run() {
 		/* DAR VOLTA CARRO - INICIO */
 
 		while (Carro::lock.test_and_set()) {}
-		cout << endl << "Carro | Iniciando Volta Nº: " << voltas << endl;
+		cout << endl << "######## Iniciando Volta Nº: " << voltas << " ########" << endl;
 		Carro::lock.clear(); // SAIDA
 
 		daUmaVolta();
 
 		while (Carro::lock.test_and_set()) {}
-		cout << endl <<"Carro | Terminei Volta Nº: " << voltas << endl;
+		cout << endl <<"######## Volta Nº: " << voltas << " Terminada! ########" << endl;
 		Carro::lock.clear();
+
+		// Espera para que usuário veja as mensagens
+		delay(4);
+
+		system("clear");
 
 		/* DAR VOLTA CARRO - FIM */
 
