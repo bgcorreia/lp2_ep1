@@ -30,7 +30,7 @@ void Passageiro::entraNoCarro() {
     for(auto &processamento : parque->getPassageiros()){//conta até o final do vector de threads do parque(ver main.cpp)
     		// Processamento guarda o endereço do 
             if( processamento->ficha > max ){ //se a vez de alguem que está esperando for maior que o maximo
-                    max+=processamento->ficha;//o maximo passa a ser o maior mais 1
+                    max = processamento->ficha;//o maximo passa a ser o maior mais 1
             }
     }
     
@@ -42,6 +42,7 @@ void Passageiro::entraNoCarro() {
             }
     }
     
+    // secao critica
     Carro::numPassageiros.fetch_add(1, memory_order_relaxed); //Incrementa o numero de passageiros no carro
     this->ficha=0;
 	
@@ -68,8 +69,16 @@ void Passageiro::passeiaPeloParque() {
 
 	if(carro->getNVoltas() < MAX_NUM_VOLTAS){
 		
-		// Dorme um tempo aleatorio
-		delay(TEMPO_PASSEIO);
+		if (RANDOM){
+			srand(time(NULL));
+
+			// Dorme um tempo aleatorio
+			delay( rand() % MAX_TEMPO + 1 );
+		} else {
+
+			// Dorme fixo
+			delay(TEMPO_PASSEIO);
+		}
 	}
 }
 

@@ -16,7 +16,10 @@
 #define TEMPO_DELAY 2
 
 #define TEMPO_VOLTA 2
-#define TEMPO_PASSEIO 5
+#define TEMPO_PASSEIO 4
+
+#define RANDOM 1
+#define MAX_TEMPO 5
 
 #define TEMPO_ENCHER_ESVAZIAR 3
 

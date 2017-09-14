@@ -23,10 +23,10 @@ public:
 	virtual ~Parque();
 
 	void addPassageiro(Passageiro *p);
-	std::vector<Passageiro*>& getPassageiros();
+	vector<Passageiro*>& getPassageiros();
 
 private:
-	std::vector<Passageiro*> passageiros;
+	vector<Passageiro*> passageiros;
 };
 
 #endif /* PARQUE_H_ */

@@ -10,7 +10,6 @@
 #include "include/Passageiro.h"
 
 atomic<int> Parque::numPessoas = ATOMIC_VAR_INIT(10);
-//int Parque::numPessoas = 10;
 
 Parque::Parque() {
 }

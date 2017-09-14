@@ -38,7 +38,6 @@ int main() {
 	/* Adiciona endereço armazenado em passageiros[i] no vector private na classe Parque */
     }
 
-    //thread tCarro(carro); // O que faz isso?
     thread tCarro(&Carro::run,&carro); // inicia thread carro
 
     vector<thread> tPassageiros; // Cria um vetor do tipo thread com nome tPassageiros

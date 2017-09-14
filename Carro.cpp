@@ -70,10 +70,7 @@ int Carro::getNVoltas() {
 }
 
 void Carro::run() {
-	while (parque->numPessoas.load(std::memory_order_relaxed) > 0) {
-
-		// COLOCAR O BREAK
-		//if(voltas == 0) break;
+	while (parque->numPessoas.load(memory_order_relaxed) > 0) { // Verifica se tem pessoas no parque
 
 		/* ENCHER CARRO - INICIO */
 		
@@ -81,15 +78,13 @@ void Carro::run() {
 		cout<< endl << "Aguardando carro encher..." << endl;
 		Carro::lock.clear();
 
-		esperaEncher();
+		esperaEncher(); // Espera os passageiros entrarem no carro
 
 		while (Carro::lock.test_and_set()) {}
 		cout<< endl << "Carro cheio!" << endl;
 		Carro::lock.clear();
 
 		/* ENCHER CARRO - FIM */
-
-		//if(parque->numPessoas.load(std::memory_order_relaxed) == 0) break;
 		
 		/* DAR VOLTA CARRO - INICIO */
 
