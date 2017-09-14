@@ -11,9 +11,6 @@
 #include "include/Carro.h"
 #include "include/Parque.h"
 
-#define TEMPO_PASSEIO 5
-#define TEMPO_VOLTA 2
-
 using namespace std;
 
 Passageiro::Passageiro(int id, Carro *c, Parque *p) {
@@ -102,7 +99,7 @@ void Passageiro::run() {
         Carro::lock.clear();
 
         while (Carro::lock.test_and_set()) {}
-		cout << endl << "Thread: " << this->id << " | " << " Vou passear pelo parque!" << endl;
+		cout << endl << "Thread: " << this->id << " | " << "Vou passear pelo parque!" << endl;
 		Carro::lock.clear();
 		passeiaPeloParque(); // secao nao critica
 	}
