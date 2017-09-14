@@ -10,6 +10,8 @@
 
 #include <atomic>
 
+#define MAX_NUM_VOLTAS 4
+
 using namespace std;
 
 void delay(int);
@@ -23,7 +25,7 @@ public:
 	static std::atomic_flag lock;
 	static bool voltaAcabou;
 
-	Carro();
+	Carro(Parque *);
 	virtual ~Carro();
 	void esperaEncher();
 	void daUmaVolta();
@@ -38,6 +40,7 @@ public:
 
 private:
 	int voltas;
+	Parque *parque;
 
 };
 
