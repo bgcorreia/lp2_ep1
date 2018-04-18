@@ -72,6 +72,8 @@ int Carro::getNVoltas() {
 void Carro::run() {
 	while (parque->numPessoas.load(memory_order_relaxed) > 0) { // Verifica se tem pessoas no parque
 
+		if(parque->numPessoas.load(std::memory_order_relaxed) == 0) break;
+
 		/* ENCHER CARRO - INICIO */
 		
 		while (Carro::lock.test_and_set()) {}

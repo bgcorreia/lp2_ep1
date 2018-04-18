@@ -28,7 +28,7 @@ int main() {
 	Carro carro(&parque);
 	Passageiro *passageiros[10]; // Cria um array do tipo Passageiro
 
-    mensagem exibir;
+    mensagem exibir; // Objeto da classe mensagem
 
     for (int i = 0; i < 10; i++) { // Enquanto o i for menor que o nº de passageiros, faça
     	passageiros[i] = new Passageiro(i, &carro, &parque);
